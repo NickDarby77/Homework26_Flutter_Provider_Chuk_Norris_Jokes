@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lesson52_practice_provider_chuknorris/hive/hive_joke_model.dart';
+import 'package:lesson52_practice_provider_chuknorris/hive/hive_service.dart';
 import 'package:lesson52_practice_provider_chuknorris/providers/joke_provider.dart';
 import 'package:lesson52_practice_provider_chuknorris/ui/favorites_page.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +27,7 @@ class HomePage extends StatelessWidget {
                 Text(
                   vm.model.value ?? '',
                   style: const TextStyle(
-                    fontSize: 35,
+                    fontSize: 29,
                     fontWeight: FontWeight.bold,
                     color: Colors.indigo,
                   ),
@@ -35,7 +37,17 @@ class HomePage extends StatelessWidget {
                 vm.model.value != null
                     ? IconButton(
                         onPressed: () {
-                          vm.addToFavorites(joke: vm.model);
+                          HiveService.addJoke(
+                            HiveJokeModel(
+                              categories: vm.model.categories ?? [],
+                              createdAt: vm.model.createdAt ?? '',
+                              iconUrl: vm.model.iconUrl ?? '',
+                              id: vm.model.id ?? '',
+                              updatedAt: vm.model.updatedAt ?? '',
+                              url: vm.model.url ?? '',
+                              value: vm.model.value ?? '',
+                            ),
+                          );
                         },
                         icon: const Icon(
                           Icons.favorite,

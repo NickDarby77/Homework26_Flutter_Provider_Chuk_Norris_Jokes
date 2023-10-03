@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lesson52_practice_provider_chuknorris/hive/hive_service.dart';
 import 'package:lesson52_practice_provider_chuknorris/providers/joke_provider.dart';
 import 'package:lesson52_practice_provider_chuknorris/ui/home_page.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveService.initHive();
   runApp(const MyApp());
 }
 

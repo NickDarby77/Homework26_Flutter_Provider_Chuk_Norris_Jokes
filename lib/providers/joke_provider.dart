@@ -10,10 +10,14 @@ class JokeProvider extends ChangeNotifier {
   List<JokeModel> favoriteJokes = [];
 
   Future<void> getJoke() async {
-    final Response response = await dio.get(
-      'https://api.chucknorris.io/jokes/random',
-    );
-    model = JokeModel.fromJson(response.data);
+    try {
+      final Response response = await dio.get(
+        'https://api.chucknorris.io/jokes/random',
+      );
+      model = JokeModel.fromJson(response.data);
+    } catch (e) {
+      print(e.toString());
+    }
     notifyListeners();
   }
 
@@ -34,19 +38,19 @@ class JokeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void addToFavorites({required JokeModel joke}) {
-  //   bool isJokeInFavorites = false;
+  /*void addToFavorites2({required JokeModel joke}) {
+    bool isJokeInFavorites = false;
 
-  //   for (int i = 0; i < favoriteJokes.length; i++) {
-  //     if (favoriteJokes[i].value == joke.value) {
-  //       isJokeInFavorites = true;
-  //       break;
-  //     }
-  //   }
+    for (int i = 0; i < favoriteJokes.length; i++) {
+      if (favoriteJokes[i].value == joke.value) {
+        isJokeInFavorites = true;
+        break;
+      }
+    }
 
-  //   if (!isJokeInFavorites) {
-  //     favoriteJokes.add(joke);
-  //   }
-  //   notifyListeners();
-  // }
+    if (!isJokeInFavorites) {
+      favoriteJokes.add(joke);
+    }
+    notifyListeners();
+  }*/
 }

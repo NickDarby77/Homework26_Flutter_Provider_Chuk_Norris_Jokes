@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:lesson52_practice_provider_chuknorris/providers/joke_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:lesson52_practice_provider_chuknorris/hive/hive_joke_model.dart';
+import 'package:lesson52_practice_provider_chuknorris/hive/hive_service.dart';
 
-class FavoritesPage extends StatelessWidget {
+class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
 
   @override
+  State<FavoritesPage> createState() => _FavoritesPageState();
+}
+
+class _FavoritesPageState extends State<FavoritesPage> {
+  List<HiveJokeModel> listJokes = <HiveJokeModel>[];
+
+  @override
+  void initState() {
+    listJokes = HiveService.getAllJokes();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final vm = context.watch<JokeProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -20,7 +32,10 @@ class FavoritesPage extends StatelessWidget {
               color: Colors.brown,
             ),
             onPressed: () {
-              vm.removeAllFavorites();
+              setState(() {
+                HiveService.deleteAllJokes();
+                listJokes = HiveService.getAllJokes();
+              });
             },
           ),
         ],
@@ -28,7 +43,7 @@ class FavoritesPage extends StatelessWidget {
       ),
       body: ListView.builder(
         shrinkWrap: true,
-        itemCount: vm.favoriteJokes.length,
+        itemCount: listJokes.length,
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.all(9),
           child: Container(
@@ -41,7 +56,7 @@ class FavoritesPage extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    vm.favoriteJokes[index].value ?? '',
+                    listJokes[index].value,
                     style: const TextStyle(
                       fontSize: 29,
                       fontWeight: FontWeight.bold,
@@ -49,7 +64,10 @@ class FavoritesPage extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      vm.removeFromFavorites(joke: vm.favoriteJokes[index]);
+                      setState(() {
+                        HiveService.removeJoke(index);
+                        listJokes = HiveService.getAllJokes();
+                      });
                     },
                     icon: const Icon(
                       Icons.delete,
